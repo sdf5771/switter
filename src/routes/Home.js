@@ -1,12 +1,14 @@
 import Switt from 'components/Switt';
-import { dbService } from 'fbase';
+import { dbService, storageService } from 'fbase';
 import { addDoc, collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import React, { useState, useEffect } from 'react';
+import {v4 as uuidv4} from 'uuid'; // random uid Library
 
 const Home = ({ userObj }) => {
     const [switt, setSwitt] = useState("");
     const [switts, setSwitts] = useState([]);
-    const [attachment, setAttachment] = useState(); // file url 관리
+    const [attachment, setAttachment] = useState(""); // file url 관리
     useEffect(() => {
         const q = query(collection(dbService, "switts"), orderBy("createAt", "desc"));
         onSnapshot(q, (snapshot) => {
@@ -19,17 +21,21 @@ const Home = ({ userObj }) => {
     }, [])
     const onSubmit = async (event) => {
         event.preventDefault();
-        try{
-            const docRef = await addDoc(collection(dbService, "switts"),{
-                text: switt,
-                createAt: Date.now(),
-                creatorId: userObj.uid,
-            });
-            console.log("Document written with ID : ", docRef.id);
-        }catch(error){
-            console.log("Error adding document : ", error);
-        }
-        setSwitt("");
+        const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+        const response = await uploadString(fileRef, attachment, "data_url");
+        console.log(response);
+        await getDownloadURL(attachmentRef).then();
+        // try{
+        //     const docRef = await addDoc(collection(dbService, "switts"),{
+        //         text: switt,
+        //         createAt: Date.now(),
+        //         creatorId: userObj.uid,
+        //     });
+        //     console.log("Document written with ID : ", docRef.id);
+        // }catch(error){
+        //     console.log("Error adding document : ", error);
+        // }
+        // setSwitt("");
     };
     const onChange = (event) => {
         const {target:{value},} = event;
@@ -45,7 +51,7 @@ const Home = ({ userObj }) => {
         };
         reader.readAsDataURL(theFile);
     };
-    const onClearAttachment = () => setAttachment(null);
+    const onClearAttachment = () => setAttachment("");
     return (
         <div>
             <form onSubmit={onSubmit}>

@@ -21,21 +21,26 @@ const Home = ({ userObj }) => {
     }, [])
     const onSubmit = async (event) => {
         event.preventDefault();
-        const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
-        const response = await uploadString(fileRef, attachment, "data_url");
-        console.log(response);
-        await getDownloadURL(attachmentRef).then();
-        // try{
-        //     const docRef = await addDoc(collection(dbService, "switts"),{
-        //         text: switt,
-        //         createAt: Date.now(),
-        //         creatorId: userObj.uid,
-        //     });
-        //     console.log("Document written with ID : ", docRef.id);
-        // }catch(error){
-        //     console.log("Error adding document : ", error);
-        // }
-        // setSwitt("");
+        let attachmentUrl = "";
+        if(attachment !== '') {
+            const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+            const response = await uploadString(attachmentRef, attachment, "data_url"); 
+            attachmentUrl = await getDownloadURL(attachmentRef).then();
+        }
+        const swittObj = {
+            text: switt,
+            createAt: Date.now(),
+            creatorId: userObj.uid,
+            attachmentUrl,
+        };
+        try{
+            const docRef = await addDoc(collection(dbService, "switts"), swittObj);
+            console.log("Document written with ID : ", docRef.id);
+        }catch(error){
+            console.log("Error adding document : ", error);
+        }
+        setSwitt("");
+        setAttachment("");
     };
     const onChange = (event) => {
         const {target:{value},} = event;

@@ -1,4 +1,5 @@
-import { dbService } from 'fbase';
+import { dbService, storageService } from 'fbase';
+import { deleteObject, ref } from 'firebase/storage';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 
@@ -12,6 +13,7 @@ const Switt = ({ swittObj, isOwner }) => {
         if(ok){ // window.confirm ok는 true 를 반환
             // Delete Switts
             await deleteDoc(SwittTextRef);
+            await deleteObject(ref(storageService, swittObj.attachmentUrl));
         }
     };
     const toggleEditing = async () => setEditing((prev) => !prev);
@@ -40,6 +42,7 @@ const Switt = ({ swittObj, isOwner }) => {
                     </>
                     ) : (
                     <><h4>{swittObj.text}</h4>
+                    {swittObj.attachmentUrl && <img src={swittObj.attachmentUrl} width='50px' height='50px'/>}
                     {isOwner && (
                         <>
                             <button onClick={onDeleteClick}>Delete Switt</button>

@@ -2,6 +2,8 @@ import { dbService, storageService } from 'fbase';
 import { deleteObject, ref } from 'firebase/storage';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Switt = ({ swittObj, isOwner }) => {
     const [editing, setEditing] = useState(false);
@@ -30,24 +32,28 @@ const Switt = ({ swittObj, isOwner }) => {
         setNewSwitt(value);
     }
     return (
-        <div>
+        <div className='switt'>
             {
                 editing ? (
                     <>
-                        <form onSubmit={onSubmit}>
-                            <input type="text" placeholder="Edit your Switt" value={newSwitt} required onChange={onChange} />
-                            <input type="submit" value="Update Switt" />
+                        <form onSubmit={onSubmit} className='container swittEdit'>
+                            <input type="text" placeholder="Edit your Switt" value={newSwitt} required autoFocus onChange={onChange} className='formInput' />
+                            <input type="submit" value="Update Switt" className='formBtn'/>
                         </form>
-                        <button onClick={toggleEditing}>Cancel</button>
+                        <button onClick={toggleEditing} className='formBtn cancelBtn'>Cancel</button>
                     </>
                     ) : (
                     <><h4>{swittObj.text}</h4>
-                    {swittObj.attachmentUrl && <img src={swittObj.attachmentUrl} width='50px' height='50px'/>}
+                    {swittObj.attachmentUrl && <img src={swittObj.attachmentUrl}/>}
                     {isOwner && (
-                        <>
-                            <button onClick={onDeleteClick}>Delete Switt</button>
-                            <button onClick={toggleEditing}>Edit Switt</button>
-                        </>
+                        <div className='switt__actions'>
+                            <span onClick={onDeleteClick}>
+                                <FontAwesomeIcon icon={faTrash}/>
+                            </span>
+                            <span onClick={toggleEditing}>
+                                <FontAwesomeIcon icon={faPencilAlt}/>
+                            </span>
+                        </div>
                     )}
                     </>
                 )

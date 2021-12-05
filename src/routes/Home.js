@@ -17,9 +17,9 @@ const Home = ({ userObj }) => {
         });
     }, []);
     return (
-        <div>
+        <div className='container'>
             <SwittFactory userObj={userObj}/>
-            <div>
+            <div style={{ marginTop: 30 }}>
                 {switts.map((switt) => (
                     <Switt key={switt.id} swittObj={switt} isOwner={switt.creatorId === userObj.uid}/>
                 ))}

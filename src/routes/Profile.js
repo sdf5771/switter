@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { authService, dbService, storageService } from '../fbase';
 import {v4 as uuidv4} from 'uuid';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default ({ refreshUser, userObj }) => { 
     const history = useHistory();
@@ -61,20 +63,38 @@ export default ({ refreshUser, userObj }) => {
     };
     const onClearAttachment = () => setUserProfileImg("");
     return (
-        <>
-        <form onSubmit={onSubmit}>
-            <input onChange={onChange} type="text" placeholder='Display Name' value={newDisplayName} />
-            <input type="file" accept='image/*' onChange={onFileChange}/>
-            <input type="submit" value="Update Profile"  />
+        <div className='container'>
+        <form onSubmit={onSubmit} className='profileForm'>
+            <input onChange={onChange} type="text" autoFocus placeholder='Display Name' value={newDisplayName} className='formInput'/>
+            <input type="submit" value="Update Profile" className='formBtn' style={{ marginTop : 10, }} />
+            <label for="attach-file" className='factoryInput__label'>
+                    <span>Add photos</span>
+                    <FontAwesomeIcon icon={faPlus} />
+                </label>
+                <input 
+                    id='attach-file'
+                    type='file'
+                    accept='image/*'
+                    onChange={onFileChange}
+                    style={{
+                        opacity: 0,
+                    }}
+                />
             {userProfileImg && (
-                <div>
-                <img src={userProfileImg} width='50px' height='50px' border-radius='2px' value={userProfileImg} />
-                <button onClick={onClearAttachment}>Clear</button>
-            </div>
+                <div className='factoryForm__attachment'>
+                        <img src={userProfileImg} style={{
+                            backgroundImage: userProfileImg,
+                        }}/>
+                        <div className='factoryForm__clear' onClick={onClearAttachment}>
+                            <span>Remove</span>
+                            <FontAwesomeIcon icon={faTimes}/>
+                        </div>
+                    </div>
             )}
         </form>
-            <button onClick={onLogOutClick}>Log Out</button>
-            
-        </>
+            <span className='formBtn cancelBtn logOut' onClick={onLogOutClick}>
+                Log Out
+            </span>
+        </div>
     );
 };

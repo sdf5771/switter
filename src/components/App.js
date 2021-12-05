@@ -22,6 +22,7 @@ function App() {
       } else {
         // if user log in is failed
         setIsLoggedIn(false);
+        //setUserObj(null);
       }
       setInit(true);
     });

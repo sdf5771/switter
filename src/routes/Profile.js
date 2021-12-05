@@ -13,6 +13,7 @@ export default ({ refreshUser, userObj }) => {
     const onLogOutClick = () => {
         authService.signOut();
         history.push('/');
+        refreshUser();
     };
 
     const getMySwitts = async() => {
@@ -67,7 +68,7 @@ export default ({ refreshUser, userObj }) => {
             <input type="submit" value="Update Profile"  />
             {userProfileImg && (
                 <div>
-                <img src={userProfileImg} width='50px' height='50px' border-radius='2px' />
+                <img src={userProfileImg} width='50px' height='50px' border-radius='2px' value={userProfileImg} />
                 <button onClick={onClearAttachment}>Clear</button>
             </div>
             )}

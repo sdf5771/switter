@@ -29,6 +29,7 @@ const Auth = () => {
     }
     return (
     <div className='authContainer'>
+        <label>Switter</label>
         <FontAwesomeIcon 
             icon={faTwitter}
             color={"#04AAFF"}
@@ -37,8 +38,8 @@ const Auth = () => {
         />
         <AuthForm />
         <div className='authBtns'>
-            <button onClick={onSocialClick} name="github" className='authBtn'>Continue with Github<FontAwesomeIcon icon={faGithub}/></button>
-            <button onClick={onSocialClick} name="google" className='authBtn'>Continue with Google<FontAwesomeIcon icon={faGoogle}/></button>
+            <button onClick={onSocialClick} name="github" className='authBtn'>Continue with Github <FontAwesomeIcon icon={faGithub}/></button>
+            <button onClick={onSocialClick} name="google" className='authBtn'>Continue with Google <FontAwesomeIcon icon={faGoogle}/></button>
         </div>
     </div>
     );

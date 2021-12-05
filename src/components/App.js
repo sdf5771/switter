@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import AppRouter from 'components/Router';
 import { authService } from '../fbase';
+import { updateProfile } from 'firebase/auth';
 
 function App() {
   const [init, setInit] = useState(false);
@@ -12,17 +13,31 @@ function App() {
       if(user){
         // if user is log in
         setIsLoggedIn(true);
-        setUserObj(user);
+        //setUserObj(user);
+        setUserObj({
+          displayName : user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => updateProfile(user,{displayName: user.displayName, photoURL: user.photoURL}),
+        });
       } else {
         // if user log in is failed
         setIsLoggedIn(false);
       }
       setInit(true);
     });
-  }, [])
+  }, []);
+  const refreshUser = () => {
+    const user = authService.currentUser;
+    //setUserObj(Object.assign({}, user));
+    setUserObj({
+      displayName : user.displayName,
+      uid : user.uid,
+      updateProfile: (args) => user.updateProfile(args),
+    });
+  };
   return (
     <>
-    {init ? <AppRouter isLoggedIn={isLoggedIn} userObj={userObj}/> : "Initializing..."} 
+    {init ? <AppRouter refreshUser={refreshUser} isLoggedIn={isLoggedIn} userObj={userObj}/> : "Initializing..."} 
     <footer>&copy; {new Date().getFullYear()} Switter</footer>
     </>
   );
